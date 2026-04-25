@@ -1,2 +1,4 @@
 /src/quiz_learning_tracker/modules/__pycache__/
 /src/quiz_learning_tracker/__pycache__/
+/src/dist/
+/src/quiz_learning_tracker.egg-info/

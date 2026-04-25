@@ -460,7 +460,7 @@ class MainWindow(QMainWindow):
 def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     
-    '''
+    
     create_desktop_directory()    
     create_desktop_menu()
     create_desktop_file(os.path.join("~",".local","share","applications"), 
@@ -481,7 +481,7 @@ def main():
                                 overwrite=True, 
                                 program_name=about.__program_name__)
             return
-    '''
+    
     
     app = QApplication(sys.argv)
     app.setApplicationName(about.__package__) 
