@@ -1,4 +1,13 @@
-/src/quiz_learning_tracker/modules/__pycache__/
-/src/quiz_learning_tracker/__pycache__/
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Packaging (restrito ao src)
 /src/dist/
-/src/quiz_learning_tracker.egg-info/
+/src/build/
+/src/*.egg-info/
+
+# (opcional)
+.venv/
+venv/
+.env
