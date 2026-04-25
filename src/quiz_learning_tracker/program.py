@@ -60,8 +60,8 @@ DEFAULT_CONTENT={
     "number_alternatives_text": "Number of alternatives:",
     "start_test_text": "Start Test",
     "error_text": "Error",
-    "window_width": 1024,
-    "window_height": 800
+    "window_width": 800,
+    "window_height": 600
 }
 
 configure.verify_default_config(CONFIG_PATH,default_content=DEFAULT_CONTENT)
@@ -456,9 +456,18 @@ class MainWindow(QMainWindow):
 # ============================================================
 # MAIN
 # ============================================================
-if __name__ == '__main__':
+
+def main():
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    
     app = QApplication(sys.argv)
+    app.setApplicationName(about.__package__) 
+    
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
 
