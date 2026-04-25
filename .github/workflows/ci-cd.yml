@@ -70,7 +70,6 @@ jobs:
           python -m PyInstaller --onefile --windowed \
             --name quiz_learning_tracker \
             --add-data "quiz_learning_tracker/icons:icons" \
-            --add-data "quiz_learning_tracker/data:data" \
             --collect-all PyQt5 \
             program_launcher.py
 
@@ -82,7 +81,6 @@ jobs:
           python -m PyInstaller --onefile --windowed `
             --name quiz_learning_tracker `
             --add-data "quiz_learning_tracker/icons;icons" `
-            --add-data "quiz_learning_tracker/data;data" `
             --collect-all PyQt5 `
             program_launcher.py
 
