@@ -22,6 +22,36 @@ To start, use the command below:
 ```bash
 quiz-learning-tracker
 ```
+
+and load a JSON file in the next format
+
+```
+[
+  {
+    "title": ["Data Preprocessing"],
+    "topics": [
+      "Clean missing values",
+      "Normalize or scale data",
+      "Categóricos: one-hot encoding, label encoding",
+    ]
+  },
+  {
+    "title": ["Data Visualization", "Visualization"],
+    "topics": [
+      "Use charts to explore data",
+      "Examples: bar, scatter"
+    ]
+  },
+  {
+    "title": ["EDA", "Exploratory Analysis"],
+    "topics": [
+      "Understand patterns",
+      "Check correlations"
+    ]
+  }
+]
+```
+
 ## 2. More information
 
 If you want more information go to [doc](https://github.com/trucomanx/QuizLearningTracker/blob/main/doc) directory
