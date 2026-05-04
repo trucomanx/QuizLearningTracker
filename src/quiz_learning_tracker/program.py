@@ -5,13 +5,14 @@ import sys
 import json
 import random
 import signal
+import tempfile
 import subprocess
 
 from dataclasses import dataclass
 from typing import List, Dict
 
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QPushButton, QLineEdit,
+    QApplication, QMainWindow, QWidget, QPushButton, QLineEdit, QCheckBox,
     QFileDialog, QVBoxLayout, QHBoxLayout, QLabel, QSpinBox,
     QMessageBox, QRadioButton, QButtonGroup, QTextEdit, QAction, QSizePolicy
 )
@@ -37,7 +38,9 @@ CONFIG_PATH = os.path.join( os.path.expanduser("~"),
                             about.__package__, 
                             "config.json" )
 
-DEFAULT_CONTENT={   
+DEFAULT_CONTENT={  
+    "toolbal_example":"Example JSON",
+    "toolbal_example_tooltip":"Open example JSON file",
     "toolbar_configure": "Configure",
     "toolbar_configure_tooltip": "Open the configure Json file of program GUI",
     "toolbar_about": "About",
@@ -58,6 +61,7 @@ DEFAULT_CONTENT={
     "select_json_text": "Select JSON",
     "number_questions_text": "Number of questions:",
     "number_alternatives_text": "Number of alternatives:",
+    "show_answer_text": "Show answer after each question",
     "start_test_text": "Start Test",
     "error_text": "Error",
     "window_width": 800,
@@ -69,6 +73,57 @@ configure.verify_default_config(CONFIG_PATH,default_content=DEFAULT_CONTENT)
 CONFIG=configure.load_config(CONFIG_PATH)
 
 # ---------------------------------------
+
+def create_example_json_temp():
+    example_data = [
+        {
+            "title": ["Geography"],
+            "topics": [
+                "Countries and capitals",
+                "Continents and oceans",
+                "Maps and locations"
+            ]
+        },
+        {
+            "title": ["History"],
+            "topics": [
+                "Important historical events",
+                "Ancient civilizations",
+                "Famous leaders"
+            ]
+        },
+        {
+            "title": ["Science"],
+            "topics": [
+                "Basic physics and chemistry",
+                "The human body",
+                "Plants and animals"
+            ]
+        },
+        {
+            "title": ["Mathematics"],
+            "topics": [
+                "Basic arithmetic",
+                "Shapes and geometry",
+                "Simple equations"
+            ]
+        },
+        {
+            "title": ["Literature"],
+            "topics": [
+                "Famous books and authors",
+                "Story elements",
+                "Poetry and prose"
+            ]
+        }
+    ]
+
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".json", mode="w", encoding="utf-8")
+    json.dump(example_data, temp_file, indent=4, ensure_ascii=False)
+    temp_file.close()
+
+    return temp_file.name
+
 
 # ============================================================
 # DATA MODELS
@@ -181,12 +236,13 @@ class LearningCurveWidget(pg.PlotWidget):
 # TEST WINDOW
 # ============================================================
 class TestWindow(QWidget):
-    def __init__(self, questions, callback_on_finish):
+    def __init__(self, questions, callback_on_finish, instant_feedback=False):
         super().__init__()
         self.questions = questions
         self.index = 0
         self.answers = []
         self.callback_on_finish = callback_on_finish
+        self.instant_feedback = instant_feedback
 
         self.layout = QVBoxLayout()
 
@@ -227,6 +283,38 @@ class TestWindow(QWidget):
             return
 
         self.answers.append(selected)
+
+        # 👇 NOVO BLOCO
+        if self.instant_feedback:
+            self.show_feedback(selected)
+            return  # só avança depois do usuário ver
+
+        self.index += 1
+
+        if self.index >= len(self.questions):
+            self.finish()
+        else:
+            self.load_question()
+
+    def show_feedback(self, selected):
+        q = self.questions[self.index]
+        selected_text = q.options[selected]
+
+        is_correct = selected_text in q.correct_answers
+
+        correct_options = list(set(q.correct_answers) & set(q.options))
+
+        msg = QMessageBox(self)
+        msg.setWindowTitle("Feedback")
+
+        if is_correct:
+            msg.setText("✅ Correct!")
+        else:
+            msg.setText(f"❌ Wrong!\nCorrect: {', '.join(correct_options)}")
+
+        msg.exec_()
+
+        # depois do feedback → próxima
         self.index += 1
 
         if self.index >= len(self.questions):
@@ -339,6 +427,9 @@ class MainWindow(QMainWindow):
         layout.addWidget(QLabel(CONFIG["number_alternatives_text"]))
         layout.addWidget(self.opt_spin)
 
+        self.instant_feedback_checkbox = QCheckBox(CONFIG["show_answer_text"])
+        layout.addWidget(self.instant_feedback_checkbox)
+
         start_btn = QPushButton(CONFIG["start_test_text"])
         start_btn.clicked.connect(self.start_test)
         layout.addWidget(start_btn)
@@ -358,6 +449,12 @@ class MainWindow(QMainWindow):
         self.toolbar_spacer = QWidget()
         self.toolbar_spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.toolbar.addWidget(self.toolbar_spacer)
+        
+        #
+        self.example_action = QAction(QIcon.fromTheme("document-new"), , self)
+        self.example_action.setToolTip(CONFIG["toolbar_example_tooltip"])
+        self.example_action.triggered.connect(self.open_example_json)
+        self.toolbar.addAction(self.example_action)
         
         #
         self.configure_action = QAction(QIcon.fromTheme("document-properties"), 
@@ -387,6 +484,10 @@ class MainWindow(QMainWindow):
         self.toolbar.orientationChanged.connect(self.on_update_spacer_policy)
         self.on_update_spacer_policy()
 
+    def open_example_json(self):
+        path = create_example_json_temp()
+        self._open_file_in_text_editor(path)
+        
     def on_update_spacer_policy(self):
         """Atualiza a política do espaçador baseado na orientação da toolbar"""
         if self.toolbar.orientation() == Qt.Horizontal:
@@ -445,12 +546,15 @@ class MainWindow(QMainWindow):
             self.opt_spin.value()
         )
 
-        self.test_window = TestWindow(questions, self.on_test_finished)
+        self.test_window = TestWindow(  questions, 
+                                        self.on_test_finished,
+                                        instant_feedback=self.instant_feedback_checkbox.isChecked() )
         self.test_window.show()
 
     def on_test_finished(self, accuracy):
         self.accuracies.append(accuracy)
         self.plot_widget.update_curve(self.accuracies)
+
 
 
 # ============================================================
