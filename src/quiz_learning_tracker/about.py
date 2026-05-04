@@ -1,6 +1,6 @@
 # about.py
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __package__ = "quiz_learning_tracker"
 __program_name__ = "quiz-learning-tracker"
 __author__ = "Fernando Pujaico Rivera"

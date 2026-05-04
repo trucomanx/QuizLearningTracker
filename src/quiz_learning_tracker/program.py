@@ -39,8 +39,8 @@ CONFIG_PATH = os.path.join( os.path.expanduser("~"),
                             "config.json" )
 
 DEFAULT_CONTENT={  
-    "toolbal_example":"Example JSON",
-    "toolbal_example_tooltip":"Open example JSON file",
+    "toolbar_example":"Example JSON",
+    "toolbar_example_tooltip":"Open example JSON file",
     "toolbar_configure": "Configure",
     "toolbar_configure_tooltip": "Open the configure Json file of program GUI",
     "toolbar_about": "About",
@@ -451,7 +451,7 @@ class MainWindow(QMainWindow):
         self.toolbar.addWidget(self.toolbar_spacer)
         
         #
-        self.example_action = QAction(QIcon.fromTheme("document-new"), , self)
+        self.example_action = QAction(QIcon.fromTheme("document-new"), CONFIG["toolbar_example"], self)
         self.example_action.setToolTip(CONFIG["toolbar_example_tooltip"])
         self.example_action.triggered.connect(self.open_example_json)
         self.toolbar.addAction(self.example_action)
