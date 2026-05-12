@@ -21,7 +21,7 @@ quiz-learning-tracker
 Installing `quiz-learning-tracker` program
 
 ```bash
-git clone https://github.com/trucomanx/QuizLearningTracker.git
+git clone https://github.com/trucomanx-desktop/QuizLearningTracker.git
 cd QuizLearningTracker
 pip install -r requirements.txt
 cd src

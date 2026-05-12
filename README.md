@@ -54,7 +54,7 @@ and load a JSON file in the next format
 
 ## 2. More information
 
-If you want more information go to [doc](https://github.com/trucomanx/QuizLearningTracker/blob/main/doc) directory
+If you want more information go to [doc](https://github.com/trucomanx-desktop/QuizLearningTracker/blob/main/doc) directory
 
 ## 3. Buy me a coffee
 

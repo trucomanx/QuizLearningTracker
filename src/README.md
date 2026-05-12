@@ -2,7 +2,7 @@
 
 A simple application to generate quizzes from structured data and track learning performance over time.
 
-![logo](https://raw.githubusercontent.com/trucomanx/QuizLearningTracker/main/screenshot.png)
+![logo](https://raw.githubusercontent.com/trucomanx-desktop/QuizLearningTracker/main/screenshot.png)
 
 ## 1. Installing
 
@@ -54,7 +54,7 @@ and load a JSON file in the next format
 
 ## 2. More information
 
-If you want more information go to [doc](https://github.com/trucomanx/QuizLearningTracker/blob/main/doc) directory.
+If you want more information go to [doc](https://github.com/trucomanx-desktop/QuizLearningTracker/blob/main/doc) directory.
 
 ## 3. Buy me a coffee
 
